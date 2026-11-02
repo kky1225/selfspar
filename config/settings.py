@@ -45,6 +45,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 모든 화면을 기본으로 잠근다. 로그인 화면처럼 열어 둘 화면만 예외로 둔다.
+    # 로그인 여부를 알아야 하므로 AuthenticationMiddleware 뒤에 둔다.
+    'django.contrib.auth.middleware.LoginRequiredMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -54,7 +57,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -67,6 +70,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+
+# 로그인: 아래 이름은 config/urls.py의 name과 연결된다.
+LOGIN_URL = 'login'  # 로그인하지 않았을 때 보낼 화면
+LOGIN_REDIRECT_URL = 'home'  # 로그인에 성공하면 갈 화면
+LOGOUT_REDIRECT_URL = 'login'  # 로그아웃하면 갈 화면
 
 
 # Database
