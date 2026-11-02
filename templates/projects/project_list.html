@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}프로젝트 - selfspar{% endblock %}
+
+{% block content %}
+  <h1>프로젝트</h1>
+  <p><a href="{% url 'project_create' %}">프로젝트 등록</a></p>
+
+  {% if project_list %}
+    <table>
+      <thead>
+        <tr>
+          <th>이름</th>
+          <th>설명</th>
+          <th>기술 스택</th>
+          <th>등록일</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in project_list %}
+          <tr>
+            <td>{{ project.name }}</td>
+            <td>{{ project.description }}</td>
+            <td>{{ project.stack }}</td>
+            <td>{{ project.created_at|date:'Y-m-d' }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>아직 등록한 프로젝트가 없습니다.</p>
+  {% endif %}
+{% endblock %}

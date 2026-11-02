@@ -7,7 +7,7 @@
 </head>
 <body>
   <header>
-    <strong>selfspar</strong>
+    <strong><a href="{% url 'home' %}">selfspar</a></strong>
     {% if user.is_authenticated %}
       <span>{{ user.get_username }}</span>
       {# 로그아웃은 상태를 바꾸는 요청이라 링크(GET)가 아니라 POST로 보낸다. #}
