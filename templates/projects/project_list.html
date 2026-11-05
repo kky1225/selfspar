@@ -11,6 +11,7 @@
       <thead>
         <tr>
           <th>이름</th>
+          <th>대상 수</th>
           <th>설명</th>
           <th>기술 스택</th>
           <th>등록일</th>
@@ -19,7 +20,8 @@
       <tbody>
         {% for project in project_list %}
           <tr>
-            <td>{{ project.name }}</td>
+            <td><a href="{% url 'project_detail' project.pk %}">{{ project.name }}</a></td>
+            <td>{{ project.target_count }}</td>
             <td>{{ project.description }}</td>
             <td>{{ project.stack }}</td>
             <td>{{ project.created_at|date:'Y-m-d' }}</td>
