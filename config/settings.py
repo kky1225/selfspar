@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'projects',
 ]
 
@@ -77,6 +78,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 LOGIN_URL = 'login'  # 로그인하지 않았을 때 보낼 화면
 LOGIN_REDIRECT_URL = 'home'  # 로그인에 성공하면 갈 화면
 LOGOUT_REDIRECT_URL = 'login'  # 로그아웃하면 갈 화면
+
+
+# API: Django 로그인 세션으로 사용자를 확인하고, 모든 API를 기본으로 잠근다.
+# DRF의 기본값은 아무나 허용이어서 직접 적는다.
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 
 
 # Database

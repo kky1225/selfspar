@@ -208,3 +208,51 @@ class TargetTests(TestCase):
         target = Target.objects.get()
         self.assertEqual(target.project, self.project)
         self.assertEqual(target.kind, 'repo')
+
+
+class ProjectListApiTests(TestCase):
+    def setUp(self):
+        self.url = reverse('api_project_list')
+        self.user = get_user_model().objects.create_user('tester', password='correct-horse-battery')
+
+    def test_로그인하지_않으면_403이고_데이터를_주지_않는다(self):
+        Project.objects.create(name='investfeed')
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 403)
+        self.assertNotContains(response, 'investfeed', status_code=403)
+
+    def test_프로젝트_목록을_JSON으로_돌려준다(self):
+        self.client.force_login(self.user)
+        project = Project.objects.create(name='investfeed', description='금융', stack='Spring Boot')
+        Target.objects.create(project=project, name='운영 API', kind='api', environment='prod')
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+        item = response.json()[0]
+        self.assertEqual(item['id'], project.pk)
+        self.assertEqual(item['name'], 'investfeed')
+        self.assertEqual(item['description'], '금융')
+        self.assertEqual(item['stack'], 'Spring Boot')
+        self.assertEqual(item['target_count'], 1)
+        self.assertIn('created_at', item)
+
+    def test_최근_등록한_프로젝트부터_돌려준다(self):
+        self.client.force_login(self.user)
+        Project.objects.create(name='먼저 등록')
+        Project.objects.create(name='나중 등록')
+
+        response = self.client.get(self.url)
+
+        self.assertEqual([item['name'] for item in response.json()], ['나중 등록', '먼저 등록'])
+
+    def test_POST는_지원하지_않는다(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(self.url, {'name': 'investfeed'})
+
+        self.assertEqual(response.status_code, 405)
+        self.assertFalse(Project.objects.exists())
