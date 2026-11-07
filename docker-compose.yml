@@ -1,3 +1,6 @@
+# 이름을 적지 않으면 폴더 이름이 쓰인다. 폴더 위치와 상관없이 같은 이름을 쓰도록 고정한다.
+name: selfspar-backend
+
 services:
   db:
     image: postgres:18
